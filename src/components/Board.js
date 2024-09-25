@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import Animated, {useSharedValue, withSpring} from 'react-native-reanimated';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import theme from '../theme/Colors';
 import Box from './Box';
 import Button from './Button';
@@ -19,6 +21,7 @@ const Board = () => {
     checkWinner(newBoard);
     setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
   };
+
   const resetGame = () => {
     setBoard(Array(9).fill(null));
     setCurrentPlayer('X');
@@ -49,20 +52,28 @@ const Board = () => {
   return (
     <>
       <View style={styles.mainContainer}>
+        {winner ? (
+          <View style={styles.winnerTitleContainer}>
+            <FontAwesome6 name={'award'} size={scale(60)} color={'white'} />
+            <Text style={styles.winnerTitle}>Winner {winner}</Text>
+          </View>
+        ) : null}
         <View style={styles.Row}>
           {board.map((value, index) => (
             <Box key={index} value={value} onPress={() => handleCheck(index)} />
           ))}
         </View>
-        <Button
-          title="Reset"
-          onPress={resetGame}
-          height={verticalScale(40)}
-          width={scale(100)}
-          backgroundColor={theme.white}
-          radius={scale(4)}
-          padding={scale(2)}
-        />
+        <View style={styles.btnContainer}>
+          <Button
+            title="Reset"
+            onPress={resetGame}
+            height={verticalScale(40)}
+            width={scale(100)}
+            backgroundColor={theme.white}
+            radius={scale(4)}
+            padding={scale(2)}
+          />
+        </View>
       </View>
     </>
   );
@@ -84,5 +95,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+  },
+  btnContainer: {
+    marginTop: verticalScale(20),
+
+    marginRight: scale(120),
+  },
+  winnerTitleContainer: {
+    padding: scale(10),
+    marginBottom: verticalScale(15),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  winnerTitle: {
+    textAlign: 'center',
+    fontSize: scale(20),
+    color: 'white',
+    fontWeight: 'bold',
+    marginTop:verticalScale(10)
+
   },
 });
